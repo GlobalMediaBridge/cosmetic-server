@@ -2,6 +2,8 @@ import os
 import platform
 from flask import Flask, flash, send_file, render_template, redirect, request, url_for
 from werkzeug.utils import secure_filename
+import cv2
+import numpy as np
 
 UPLOAD_FOLDER = 'static/images'
 if platform.system() == 'Windows':
@@ -59,3 +61,23 @@ def show_images(filename):
     current_dir = os.path.dirname(os.path.abspath(__file__))
     return send_file(os.path.join(current_dir,
                                   app.config['UPLOAD_FOLDER'], filename), mimetype='image/jpeg')
+
+
+@app.route('/magic', methods=['GET', 'POST'])
+def magic_wand():
+    if request.method == 'POST':
+        if 'image' not in request.files:
+            return 'fail'
+
+        f = request.files['image']
+        x = int(request.form['x'])
+        y = int(request.form['y'])
+
+        if f.filename == '':
+            return 'fail'
+
+        img = cv2.imdecode(np.fromstring(
+            f.read(), np.uint8), cv2.IMREAD_UNCHANGED)
+
+        print(img[x, y])
+        return 'success'
