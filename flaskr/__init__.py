@@ -80,8 +80,13 @@ def magic_wand():
             f.read(), np.uint8), cv2.IMREAD_UNCHANGED)
 
         flood_mask = getFloodMask(img, x, y)
-        print(flood_mask)
-        return 'success'
+        mean = getMean(img, flood_mask)
+        return '(%s)' % ', '.join(map(str, mean))
+
+
+def getMean(img, mask):
+    mean = cv2.mean(img, mask)
+    return mean
 
 
 def getFloodMask(img, x, y, tolerance=32):
