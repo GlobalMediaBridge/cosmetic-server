@@ -79,5 +79,27 @@ def magic_wand():
         img = cv2.imdecode(np.fromstring(
             f.read(), np.uint8), cv2.IMREAD_UNCHANGED)
 
-        print(img[x, y])
+        flood_mask = getFloodMask(img, x, y)
+        print(flood_mask)
         return 'success'
+
+
+def getFloodMask(img, x, y, tolerance=32):
+    h, w = img.shape[:2]
+    flood_mask = np.zeros((h + 2, w + 2), dtype=np.uint8)
+    flood_fill_flags = (
+        4 | cv2.FLOODFILL_FIXED_RANGE | cv2.FLOODFILL_MASK_ONLY | 255 << 8
+    )
+    tolerance = (tolerance,) * 3
+    flood_mask[:] = 0
+    cv2.floodFill(
+        img,
+        flood_mask,
+        (x, y),
+        0,
+        tolerance,
+        tolerance,
+        flood_fill_flags,
+    )
+
+    return flood_mask[1:-1, 1:-1].copy()
