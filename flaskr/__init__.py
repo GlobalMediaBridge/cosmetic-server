@@ -44,3 +44,11 @@ def upload_file():
             return redirect(url_for('inputTest'))
 
         return 'fail'
+
+
+@app.route('/images')
+def show_images_list():
+    current_dir = os.path.join(os.path.dirname(
+        os.path.abspath(__file__)), UPLOAD_FOLDER)
+    file_list = map(lambda x: '<li>%s</li>' % x, os.listdir(current_dir))
+    return ''.join(file_list)
