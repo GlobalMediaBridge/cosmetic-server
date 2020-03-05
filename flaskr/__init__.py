@@ -83,7 +83,7 @@ def upload_palette():
         f = request.files['image']
         id = request.form['id']
 
-        if f.filename == '' | id == '':
+        if f.filename == '' or id == '':
             return 'fail'
 
         if f and allowed_file(f.filename):
