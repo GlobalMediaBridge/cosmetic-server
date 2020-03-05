@@ -77,11 +77,10 @@ def upload_palette():
     if request.method == 'POST':
         if 'image' not in request.files:
             return 'fail'
-        if 'id' not in request.form:
-            return 'fail'
+
+        id = request.headers.get('id')
 
         f = request.files['image']
-        id = request.form['id']
 
         if f.filename == '' or id == '':
             return 'fail'
@@ -98,8 +97,8 @@ def upload_palette():
 @app.route('/extract', methods=['GET', 'POST'])
 def extract_color():
     if request.method == 'POST':
+        id = request.headers.get('id')
         data = request.get_json()
-        id = data['id']
         x = data['x']
         y = data['y']
 
@@ -114,11 +113,11 @@ def extract_color():
 @app.route('/put', methods=['GET', 'POST'])
 def put_color():
     if request.method == 'POST':
+        id = request.headers.get('id')
         if 'color' not in request.form:
             return 'fail'
 
         color = request.form['color']
-        id = request.form['id']
         print(color)
         path = get_path(id)
         img = cv2.imread(os.path.join(path, 'face.jpg'))
