@@ -28,6 +28,12 @@ def allowed_file(filename):
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
+def get_path(id):
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.join(current_dir, app.config['UPLOAD_FOLDER'], id)
+    return path
+
+
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
@@ -41,9 +47,7 @@ def upload_file():
 
         if f and allowed_file(f.filename):
             id = str(uuid.uuid1())
-            current_dir = os.path.dirname(os.path.abspath(__file__))
-            path = os.path.join(
-                current_dir, app.config['UPLOAD_FOLDER'], id)
+            path = get_path(id)
             os.mkdir(path)
             filename = 'face.' + f.filename.rsplit('.', 1)[1].lower()
             f.save(os.path.join(path, filename))
