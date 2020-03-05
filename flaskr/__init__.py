@@ -43,6 +43,7 @@ def upload_file():
             current_dir = os.path.dirname(os.path.abspath(__file__))
             f.save(os.path.join(current_dir,
                                 app.config['UPLOAD_FOLDER'], filename))
+            segmentation(filename)
             return redirect(url_for('inputTest'))
 
         return 'fail'
@@ -63,8 +64,8 @@ def show_images(filename):
                                   app.config['UPLOAD_FOLDER'], filename), mimetype='image/jpeg')
 
 
-@app.route('/magic', methods=['GET', 'POST'])
-def magic_wand():
+@app.route('/extract', methods=['GET', 'POST'])
+def extract_color():
     if request.method == 'POST':
         if 'image' not in request.files:
             return 'fail'
@@ -82,6 +83,18 @@ def magic_wand():
         flood_mask = getFloodMask(img, x, y)
         mean = getMean(img, flood_mask)
         return '(%s)' % ', '.join(map(str, mean))
+
+
+@app.route('/put', methods=['GET', 'POST'])
+def put_color():
+    if request.method == 'POST':
+        if 'color' not in request.form:
+            return 'fail'
+
+        color = request.form['color']
+        image_path = request.form['id']
+
+        mask(image_path, color)
 
 
 def getMean(img, mask):
