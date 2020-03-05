@@ -98,9 +98,10 @@ def upload_palette():
 @app.route('/extract', methods=['GET', 'POST'])
 def extract_color():
     if request.method == 'POST':
-        id = request.form['id']
-        x = int(request.form['x'])
-        y = int(request.form['y'])
+        data = request.get_json()
+        id = data['id']
+        x = data['x']
+        y = data['y']
 
         path = get_path(id)
         img = cv2.imread(os.path.join(path, 'palette.jpg'))
@@ -118,11 +119,11 @@ def put_color():
 
         color = request.form['color']
         id = request.form['id']
-
+        print(color)
         path = get_path(id)
         img = cv2.imread(os.path.join(path, 'face.jpg'))
 
-        mask(img, color)
+        # mask(img, color)
 
 
 def getMean(img, mask):
