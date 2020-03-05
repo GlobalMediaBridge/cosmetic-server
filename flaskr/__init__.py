@@ -28,6 +28,12 @@ def allowed_file(filename):
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
+def get_path(id):
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.join(current_dir, app.config['UPLOAD_FOLDER'], id)
+    return path
+
+
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
@@ -41,11 +47,9 @@ def upload_file():
 
         if f and allowed_file(f.filename):
             id = str(uuid.uuid1())
-            current_dir = os.path.dirname(os.path.abspath(__file__))
-            path = os.path.join(
-                current_dir, app.config['UPLOAD_FOLDER'], id)
+            path = get_path(id)
             os.mkdir(path)
-            filename = 'face.' + f.filename.rsplit('.', 1)[1].lower()
+            filename = 'face.jpg'
             f.save(os.path.join(path, filename))
             segmentation(id)
             return id
@@ -68,21 +72,38 @@ def show_images(filename):
                                   app.config['UPLOAD_FOLDER'], filename), mimetype='image/jpeg')
 
 
-@app.route('/extract', methods=['GET', 'POST'])
-def extract_color():
+@app.route('/palette', methods=['GET', 'POST'])
+def upload_palette():
     if request.method == 'POST':
         if 'image' not in request.files:
             return 'fail'
+        if 'id' not in request.form:
+            return 'fail'
 
         f = request.files['image']
+        id = request.form['id']
+
+        if f.filename == '' | id == '':
+            return 'fail'
+
+        if f and allowed_file(f.filename):
+            path = get_path(id)
+            filename = 'palette.jpg'
+            f.save(os.path.join(path, filename))
+            return id
+
+        return 'fail'
+
+
+@app.route('/extract', methods=['GET', 'POST'])
+def extract_color():
+    if request.method == 'POST':
+        id = request.form['id']
         x = int(request.form['x'])
         y = int(request.form['y'])
 
-        if f.filename == '':
-            return 'fail'
-
-        img = cv2.imdecode(np.fromstring(
-            f.read(), np.uint8), cv2.IMREAD_UNCHANGED)
+        path = get_path(id)
+        img = cv2.imread(os.path.join(path, 'palette.jpg'))
 
         flood_mask = getFloodMask(img, x, y)
         mean = getMean(img, flood_mask)
