@@ -49,7 +49,7 @@ def upload_file():
             id = str(uuid.uuid1())
             path = get_path(id)
             os.mkdir(path)
-            filename = 'face.' + f.filename.rsplit('.', 1)[1].lower()
+            filename = 'face.jpg'
             f.save(os.path.join(path, filename))
             segmentation(id)
             return id
@@ -88,7 +88,7 @@ def upload_palette():
 
         if f and allowed_file(f.filename):
             path = get_path(id)
-            filename = 'palette.' + f.filename.rsplit('.', 1)[1].lower()
+            filename = 'palette.jpg'
             f.save(os.path.join(path, filename))
             return id
 
@@ -98,18 +98,12 @@ def upload_palette():
 @app.route('/extract', methods=['GET', 'POST'])
 def extract_color():
     if request.method == 'POST':
-        if 'image' not in request.files:
-            return 'fail'
-
-        f = request.files['image']
+        id = request.form['id']
         x = int(request.form['x'])
         y = int(request.form['y'])
 
-        if f.filename == '':
-            return 'fail'
-
-        img = cv2.imdecode(np.fromstring(
-            f.read(), np.uint8), cv2.IMREAD_UNCHANGED)
+        path = get_path(id)
+        img = cv2.imread(os.path.join(path, 'palette.jpg'))
 
         flood_mask = getFloodMask(img, x, y)
         mean = getMean(img, flood_mask)
