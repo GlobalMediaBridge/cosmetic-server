@@ -1,6 +1,6 @@
 import os
 import platform
-from flask import Flask, flash, send_file, render_template, redirect, request, url_for
+from flask import Flask, send_file, render_template, request, jsonify
 from werkzeug.utils import secure_filename
 import cv2
 import numpy as np
@@ -77,11 +77,10 @@ def upload_palette():
     if request.method == 'POST':
         if 'image' not in request.files:
             return 'fail'
-        if 'id' not in request.form:
-            return 'fail'
+
+        id = request.headers.get('id')
 
         f = request.files['image']
-        id = request.form['id']
 
         if f.filename == '' or id == '':
             return 'fail'
@@ -98,31 +97,32 @@ def upload_palette():
 @app.route('/extract', methods=['GET', 'POST'])
 def extract_color():
     if request.method == 'POST':
-        id = request.form['id']
-        x = int(request.form['x'])
-        y = int(request.form['y'])
+        id = request.headers.get('id')
+        data = request.get_json()
+        x = data['x']
+        y = data['y']
 
         path = get_path(id)
         img = cv2.imread(os.path.join(path, 'palette.jpg'))
 
         flood_mask = getFloodMask(img, x, y)
         mean = getMean(img, flood_mask)
-        return '(%s)' % ', '.join(map(str, mean))
+        return jsonify(mean)
 
 
 @app.route('/put', methods=['GET', 'POST'])
 def put_color():
     if request.method == 'POST':
+        id = request.headers.get('id')
         if 'color' not in request.form:
             return 'fail'
 
         color = request.form['color']
-        id = request.form['id']
-
+        print(color)
         path = get_path(id)
         img = cv2.imread(os.path.join(path, 'face.jpg'))
 
-        mask(img, color)
+        # mask(img, color)
 
 
 def getMean(img, mask):
