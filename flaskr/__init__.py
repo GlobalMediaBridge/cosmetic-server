@@ -63,8 +63,8 @@ def show_images(filename):
                                   app.config['UPLOAD_FOLDER'], filename), mimetype='image/jpeg')
 
 
-@app.route('/magic', methods=['GET', 'POST'])
-def magic_wand():
+@app.route('/extract', methods=['GET', 'POST'])
+def extract_color():
     if request.method == 'POST':
         if 'image' not in request.files:
             return 'fail'
