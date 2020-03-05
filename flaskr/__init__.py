@@ -83,8 +83,16 @@ def upload_palette():
         f = request.files['image']
         id = request.form['id']
 
-        if f.filename == '':
+        if f.filename == '' | id == '':
             return 'fail'
+
+        if f and allowed_file(f.filename):
+            path = get_path(id)
+            filename = 'palette.' + f.filename.rsplit('.', 1)[1].lower()
+            f.save(os.path.join(path, filename))
+            return id
+
+        return 'fail'
 
 
 @app.route('/extract', methods=['GET', 'POST'])
