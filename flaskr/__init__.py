@@ -117,9 +117,12 @@ def put_color():
             return 'fail'
 
         color = request.form['color']
-        image_path = request.form['id']
+        id = request.form['id']
 
-        mask(image_path, color)
+        path = get_path(id)
+        img = cv2.imread(os.path.join(path, 'face.jpg'))
+
+        mask(img, color)
 
 
 def getMean(img, mask):
