@@ -4,6 +4,7 @@ from flask import Flask, flash, send_file, render_template, redirect, request, u
 from werkzeug.utils import secure_filename
 import cv2
 import numpy as np
+import uuid
 
 UPLOAD_FOLDER = 'static/images'
 if platform.system() == 'Windows':
@@ -39,11 +40,14 @@ def upload_file():
             return 'fail'
 
         if f and allowed_file(f.filename):
-            filename = secure_filename(f.filename)
+            id = str(uuid.uuid1())
             current_dir = os.path.dirname(os.path.abspath(__file__))
-            f.save(os.path.join(current_dir,
-                                app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('inputTest'))
+            path = os.path.join(
+                current_dir, app.config['UPLOAD_FOLDER'], id)
+            os.mkdir(path)
+            filename = 'face.' + f.filename.rsplit('.', 1)[1].lower()
+            f.save(os.path.join(path, filename))
+            return id
 
         return 'fail'
 
