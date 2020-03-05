@@ -68,6 +68,21 @@ def show_images(filename):
                                   app.config['UPLOAD_FOLDER'], filename), mimetype='image/jpeg')
 
 
+@app.route('/palette', methods=['GET', 'POST'])
+def upload_palette():
+    if request.method == 'POST':
+        if 'image' not in request.files:
+            return 'fail'
+        if 'id' not in request.form:
+            return 'fail'
+
+        f = request.files['image']
+        id = request.form['id']
+
+        if f.filename == '':
+            return 'fail'
+
+
 @app.route('/extract', methods=['GET', 'POST'])
 def extract_color():
     if request.method == 'POST':
