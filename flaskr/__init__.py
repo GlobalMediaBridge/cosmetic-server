@@ -1,6 +1,6 @@
 import os
 import platform
-from flask import Flask, flash, send_file, render_template, redirect, request, url_for
+from flask import Flask, send_file, render_template, request, jsonify
 from werkzeug.utils import secure_filename
 import cv2
 import numpy as np
@@ -107,7 +107,7 @@ def extract_color():
 
         flood_mask = getFloodMask(img, x, y)
         mean = getMean(img, flood_mask)
-        return '(%s)' % ', '.join(map(str, mean))
+        return jsonify(mean)
 
 
 @app.route('/put', methods=['GET', 'POST'])
