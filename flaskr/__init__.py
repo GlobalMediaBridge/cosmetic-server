@@ -4,6 +4,7 @@ from flask import Flask, flash, send_file, render_template, redirect, request, u
 from werkzeug.utils import secure_filename
 import cv2
 import numpy as np
+import uuid
 
 UPLOAD_FOLDER = 'static/images'
 if platform.system() == 'Windows':
@@ -39,11 +40,15 @@ def upload_file():
             return 'fail'
 
         if f and allowed_file(f.filename):
-            filename = secure_filename(f.filename)
+            id = str(uuid.uuid1())
             current_dir = os.path.dirname(os.path.abspath(__file__))
-            f.save(os.path.join(current_dir,
-                                app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('inputTest'))
+            path = os.path.join(
+                current_dir, app.config['UPLOAD_FOLDER'], id)
+            os.mkdir(path)
+            filename = 'face.' + f.filename.rsplit('.', 1)[1].lower()
+            f.save(os.path.join(path, filename))
+            segmentation(id)
+            return id
 
         return 'fail'
 
@@ -63,8 +68,8 @@ def show_images(filename):
                                   app.config['UPLOAD_FOLDER'], filename), mimetype='image/jpeg')
 
 
-@app.route('/magic', methods=['GET', 'POST'])
-def magic_wand():
+@app.route('/extract', methods=['GET', 'POST'])
+def extract_color():
     if request.method == 'POST':
         if 'image' not in request.files:
             return 'fail'
@@ -82,6 +87,18 @@ def magic_wand():
         flood_mask = getFloodMask(img, x, y)
         mean = getMean(img, flood_mask)
         return '(%s)' % ', '.join(map(str, mean))
+
+
+@app.route('/put', methods=['GET', 'POST'])
+def put_color():
+    if request.method == 'POST':
+        if 'color' not in request.form:
+            return 'fail'
+
+        color = request.form['color']
+        image_path = request.form['id']
+
+        mask(image_path, color)
 
 
 def getMean(img, mask):
