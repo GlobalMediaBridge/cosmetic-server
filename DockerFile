@@ -4,4 +4,4 @@ WORKDIR /app
 RUN pip install flask
 RUN pip install opencv-python
 EXPOSE 5000
-CMD ["flask", "run"]
+CMD ["python", "app.py"]
