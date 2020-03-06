@@ -110,19 +110,23 @@ def extract_color():
         return jsonify(mean)
 
 
-@app.route('/put', methods=['GET', 'POST'])
+@app.route('/makeup', methods=['GET', 'POST'])
 def put_color():
     if request.method == 'POST':
         id = request.headers.get('id')
-        if 'color' not in request.form:
+        data = request.get_json()
+
+        if 'color' not in data:
             return 'fail'
 
-        color = request.form['color']
-        print(color)
+        color = data['color']
+
         path = get_path(id)
+
         img = cv2.imread(os.path.join(path, 'face.jpg'))
 
         # mask(img, color)
+        return 'success'
 
 
 def getMean(img, mask):
