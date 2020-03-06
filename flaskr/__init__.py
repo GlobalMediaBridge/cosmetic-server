@@ -40,15 +40,14 @@ def upload_file():
         if 'image' not in request.files:
             return 'fail'
 
+        id = request.headers.get('id')
         f = request.files['image']
 
-        if f.filename == '':
+        if f.filename == '' or id == '':
             return 'fail'
 
         if f and allowed_file(f.filename):
-            id = str(uuid.uuid1())
             path = get_path(id)
-            os.mkdir(path)
             filename = 'face.jpg'
             image_path = os.path.join(path, filename)
             f.save(image_path)
@@ -79,15 +78,15 @@ def upload_palette():
         if 'image' not in request.files:
             return 'fail'
 
-        id = request.headers.get('id')
-
         f = request.files['image']
 
-        if f.filename == '' or id == '':
+        if f.filename == '':
             return 'fail'
 
         if f and allowed_file(f.filename):
+            id = str(uuid.uuid1())
             path = get_path(id)
+            os.mkdir(path)
             filename = 'palette.jpg'
             f.save(os.path.join(path, filename))
             return id
