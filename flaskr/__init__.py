@@ -132,9 +132,8 @@ def extract_color():
         return jsonify(mean)
 
 
-@app.route('/area')
+@app.route('/area/<id>')
 def show_images(filename):
-    id = request.headers.get('id')
     path = get_path(id)
     return send_file(os.path.join(path,
                                   "area.jpg"), mimetype='image/jpeg')
