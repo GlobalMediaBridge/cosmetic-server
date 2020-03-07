@@ -65,13 +65,6 @@ def show_images_list():
     return ''.join(file_list)
 
 
-@app.route('/images/<filename>')
-def show_images(filename):
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    return send_file(os.path.join(current_dir,
-                                  app.config['UPLOAD_FOLDER'], filename), mimetype='image/jpeg')
-
-
 @app.route('/palette', methods=['GET', 'POST'])
 def upload_palette():
     if request.method == 'POST':
