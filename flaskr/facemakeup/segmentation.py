@@ -18,11 +18,11 @@ def segmentation(path):
     }
     '''
 
-    image_path = path
     current_dir = os.path.dirname(os.path.abspath(__file__)) #절대경로
-    cp = os.path.join(current_dir, 'cp/79999_iter.pth')
+    image_path = os.path.join(path, 'face.jpg')
+    cp = os.path.join(current_dir, 'cp/79999_iter.pth') #상대경로->절대경로로
 
-    img = cv2.imread(os.path.join(path, 'face.jpg')) #우선 이미지 읽어들이기
+    img = cv2.imread(image_path) #우선 이미지 읽어들이기
     ori = img.copy() #original
     parsing = evaluate(image_path, cp) # test.py의 evaluate() 함수. (512, 512)의 image (parsing) return.
     parsing = cv2.resize(parsing, img.shape[0:2], interpolation=cv2.INTER_NEAREST) #이미지 사이즈 조정. 픽셀사이 값 보간. / image.shape[] : [Y축, X축, 채널수] 순서 중 0,1번지 2개만 가져옴
