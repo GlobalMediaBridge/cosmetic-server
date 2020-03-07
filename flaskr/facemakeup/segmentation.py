@@ -44,5 +44,5 @@ def segmentation(path):
     #print(np.shape(parsing), type(parsing)) #(960, 960), <class 'numpy.ndarray'>
     cv2.imshow('seg', parsing.astype('uint8')) #segmentation
 
-    cv2.waitKey(0)
+    cv2.waitKey()
     cv2.destroyAllWindows()
