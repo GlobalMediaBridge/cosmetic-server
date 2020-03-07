@@ -17,12 +17,12 @@ def segmentation(path):
     parsing_image_path = os.path.join(path, 'parsing.jpg')
     cv2.imwrite(parsing_image_path, parsing)
 
-    makeup = makeup(image_path, parsing_image_path)
+    makeup_img = makeup(image_path, parsing_image_path)
 
     cv2.imshow('ori', cv2.resize(ori, (512,512))) #original img
     cv2.imshow('seg', cv2.resize(parsing.astype('uint8'), (512,512))) #segmentation img
     #print(np.shape(parsing), type(parsing)) #(960, 960), <class 'numpy.ndarray'>
-    cv2.imshow('makeup', cv2.resize(makeup.astype('uint8'), (512,512)))
+    cv2.imshow('makeup', cv2.resize(makeup_img.astype('uint8'), (512,512)))
 
     cv2.waitKey()
     cv2.destroyAllWindows()
