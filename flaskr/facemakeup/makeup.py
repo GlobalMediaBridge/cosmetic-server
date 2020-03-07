@@ -58,7 +58,7 @@ def makeup(face, parsing):
         'lower_lip': 13
     }
     parts = [table['hair'], table['upper_lip'], table['lower_lip']] #[17, 12, 13]
-    colors = [[17, 17, 63], [42.75, 63.84, 208.98], [42.75, 63.84, 208.98]] #[b,g,r] 순서
+    colors = [[17, 17, 63], [180,70,20], [180,70,20]] #[b,g,r] 순서
 
     # 두 변수 part라는 index는 parts를, color는 colors를 동시에 for문을 돌음
     for part, color in zip(parts, colors):
