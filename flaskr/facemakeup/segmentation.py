@@ -41,7 +41,8 @@ def segmentation(path):
     '''
 
     cv2.imshow('ori', cv2.resize(ori, (512,512))) #original
-    cv2.imshow('seg', parsing) #segmentation
+    #print(np.shape(parsing), type(parsing)) #(960, 960), <class 'numpy.ndarray'>
+    cv2.imshow('seg', parsing.astype('uint8')) #segmentation
 
     cv2.waitKey(0)
     cv2.destroyAllWindows()
