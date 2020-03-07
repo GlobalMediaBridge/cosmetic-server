@@ -3,12 +3,7 @@ import cv2 as cv2
 import os
 from flaskr.facemakeup.test import evaluate
 def segmentation(path):
-    '''
-    img = cv2.imread(os.path.join(path, 'face.jpg'))
-    cv2.imshow('img',img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-    '''
+
     '''
     # dictionary형. table['hair']=17로 사용
     table = {
@@ -35,14 +30,11 @@ def segmentation(path):
     # 두 변수 part라는 index는 parts를, color는 colors를 동시에 for문을 돌음
     for part, color in zip(parts, colors):
         image = hair(image, parsing, part, color) #hair함수에 들어가는 인자 image는 원래 원본이미지 / 한 부분, 한 색상(bgr)씩 들어감 => 3번 돌면 image 완성
-
-    cv2.imshow('ori', cv2.resize(ori, (512, 512)))    # 원본이미지 
-    cv2.imshow('color', cv2.resize(image, (512, 512)))  # makeup이미지
     '''
 
-    cv2.imshow('ori', cv2.resize(ori, (512,512))) #original
+    cv2.imshow('ori', cv2.resize(ori, (512,512))) #original img
+    cv2.imshow('seg', cv2.resize(parsing.astype('uint8'), (512,512))) #segmentation img
     #print(np.shape(parsing), type(parsing)) #(960, 960), <class 'numpy.ndarray'>
-    cv2.imshow('seg', parsing.astype('uint8')) #segmentation
 
     cv2.waitKey()
     cv2.destroyAllWindows()
