@@ -123,8 +123,7 @@ def extract_color():
 
         x = int(x * ratio)
         y = int(y * ratio)
-        print(x)
-        print(y)
+
         flood_mask = getFloodMask(img, x, y)
 
         contours = find_contours(flood_mask)
@@ -133,8 +132,8 @@ def extract_color():
         return jsonify(mean)
 
 
-@app.route('/area/<id>')
-def show_images(id):
+@app.route('/area/<id>/<color>')
+def show_images(id, color):
     path = get_path(id)
     return send_file(os.path.join(path,
                                   "area.jpg"), mimetype='image/jpeg')
