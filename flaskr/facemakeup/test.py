@@ -47,7 +47,7 @@ def vis_parsing_maps(im, parsing_anno, stride, save_im=False, save_path='vis_res
     # return vis_im
 
 # 학습시키기(학습시켜놓은걸로 평가하기)
-def evaluate(image_path='./imgs/116.jpg', cp='cp/79999_iter.pth'):
+def evaluate(image_path, cp):
 
     # if not os.path.exists(respth):
     #     os.makedirs(respth)

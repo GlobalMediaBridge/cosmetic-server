@@ -19,7 +19,8 @@ def segmentation(path):
     '''
 
     image_path = path
-    cp = 'cp/79999_iter.pth'
+    current_dir = os.path.dirname(os.path.abspath(__file__)) #절대경로
+    cp = os.path.join(current_dir, 'cp/79999_iter.pth')
 
     img = cv2.imread(os.path.join(path, 'face.jpg')) #우선 이미지 읽어들이기
     ori = img.copy() #original
