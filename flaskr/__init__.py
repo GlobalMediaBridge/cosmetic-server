@@ -94,6 +94,25 @@ def upload_palette():
         return 'fail'
 
 
+def find_contours(img):
+    ret = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    if len(ret) == 2:
+        return ret[0]
+    elif len(ret) == 3:
+        return ret[1]
+    raise Exception("Check the signature for `cv.findContours()`.")
+
+
+def save_mask(img, contours, path):
+    viz = img.copy()
+    viz = cv2.drawContours(
+        viz, contours, -1, color=(255,) * 3, thickness=-1)
+    viz = cv2.addWeighted(img, 0.75, viz, 0.25, 0)
+    viz = cv2.drawContours(
+        viz, contours, -1, color=(255,) * 3, thickness=1)
+    cv2.imwrite(os.path.join(path, 'area.jpg'), viz)
+
+
 @app.route('/extract', methods=['GET', 'POST'])
 def extract_color():
     if request.method == 'POST':
@@ -106,8 +125,19 @@ def extract_color():
         img = cv2.imread(os.path.join(path, 'palette.jpg'))
 
         flood_mask = getFloodMask(img, x, y)
+
+        contours = find_contours(flood_mask)
+        save_mask(img, contours, path)
         mean = getMean(img, flood_mask)
         return jsonify(mean)
+
+
+@app.route('/area')
+def show_images(filename):
+    id = request.headers.get('id')
+    path = get_path(id)
+    return send_file(os.path.join(path,
+                                  "area.jpg"), mimetype='image/jpeg')
 
 
 @app.route('/makeup', methods=['GET', 'POST'])
