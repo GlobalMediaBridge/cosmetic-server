@@ -113,11 +113,15 @@ def extract_color():
         data = request.get_json()
         x = data['x']
         y = data['y']
+        width = data['width']
 
         path = get_path(id)
         img = cv2.imread(os.path.join(path, 'palette.jpg'))
+        origin_width = np.shape(img)[1]
 
-        flood_mask = getFloodMask(img, x, y)
+        ratio = origin_width/width
+
+        flood_mask = getFloodMask(img, x * ratio, y * ratio)
 
         contours = find_contours(flood_mask)
         save_mask(img, contours, path)
