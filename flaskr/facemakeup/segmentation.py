@@ -41,7 +41,7 @@ def segmentation(path):
     '''
 
     cv2.imshow('ori', cv2.resize(ori, (512,512))) #original
-    cv2.imshow('seg', cv2.resize(parsing, (512,512))) #segmentation
+    cv2.imshow('seg', parsing) #segmentation
 
     cv2.waitKey(0)
     cv2.destroyAllWindows()
