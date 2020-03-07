@@ -121,7 +121,11 @@ def extract_color():
 
         ratio = origin_width/width
 
-        flood_mask = getFloodMask(img, x * ratio, y * ratio)
+        x = int(x * ratio)
+        y = int(y * ratio)
+        print(x)
+        print(y)
+        flood_mask = getFloodMask(img, x, y)
 
         contours = find_contours(flood_mask)
         save_mask(img, contours, path)
