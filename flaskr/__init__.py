@@ -126,7 +126,7 @@ def extract_color():
 
 
 @app.route('/area/<id>')
-def show_images(filename):
+def show_images(id):
     path = get_path(id)
     return send_file(os.path.join(path,
                                   "area.jpg"), mimetype='image/jpeg')
