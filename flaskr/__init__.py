@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 import cv2
 import numpy as np
 import uuid
+from flaskr.facemakeup.segmentation import segmentation
 
 UPLOAD_FOLDER = 'static/images'
 if platform.system() == 'Windows':
@@ -51,7 +52,7 @@ def upload_file():
             filename = 'face.jpg'
             image_path = os.path.join(path, filename)
             f.save(image_path)
-            # segmentation(id, image_path)
+            segmentation(path)
             return id
 
         return 'fail'
