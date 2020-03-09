@@ -48,30 +48,20 @@ def lip(image, parsing, part=12, color=[230, 50, 20]):
 
 def makeup(path):
     # path : folder name(id)
-    image = cv2.imread(os.path.join(path, 'face.jpg')) #ori
+    face = cv2.imread(os.path.join(path, 'face.jpg')) #ori
     parsing = cv2.imread(os.path.join(path, 'parsing.jpg')) #seg
 
     table = {
         'upper_lip': 12,
         'lower_lip': 13
     }
-    parts = [table['upper_lip'], table['lower_lip']] #[17, 12, 13]
+    parts = [table['upper_lip'], table['lower_lip']] #[12, 13]
     colors = [[180,70,20], [180,70,20]] #[b,g,r] 순서
 
-    # 두 변수 part라는 index는 parts를, color는 colors를 동시에 for문을 돌음
+    # lip makeup
     for part, color in zip(parts, colors):
-        makeup = lip(image, parsing, part, color) #hair함수에 들어가는 인자 image는 원래 원본이미지 / 한 부분, 한 색상(bgr)씩 들어감 => 3번 돌면 image 완성
+        makeup = lip(face, parsing, part, color) # 한 부분, 한 색상(bgr)씩 들어감 => 2번 돌면 makeup 완성
 
+    # save result
+    cv2.imwrite(os.path.join(path, 'makeup.jpg'), makeup)
 
-    image_path = os.path.join(path, 'face.jpg')
-    makeup_img_path = os.path.join(path, 'makeup.jpg')
-    cv2.imwrite(makeup_img_path, makeup)
-
-    '''
-    # from segmentation() to makeup()
-    makeup_img = makeup(image_path, parsing_img_path) # image_path == face, parsing_img_path == parsing
-    makeup_img_path = os.path.join(path, 'makeup.jpg')
-    cv2.imwrite(makeup_img_path, makeup_img)
-    '''
-
-    return makeup
