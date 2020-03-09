@@ -5,7 +5,7 @@ from flaskr.facemakeup.test import evaluate
 from flaskr.facemakeup.makeup import makeup
 
 def segmentation(path):
-    #path : folder name(id)
+    # path : folder name(id)
     current_dir = os.path.dirname(os.path.abspath(__file__)) #절대경로
     image_path = os.path.join(path, 'face.jpg')
     cp = os.path.join(current_dir, 'cp/79999_iter.pth') #상대경로->절대경로로
@@ -20,11 +20,7 @@ def segmentation(path):
     parsing_img_path = os.path.join(path, 'parsing.jpg')
     cv2.imwrite(parsing_img_path, parsing)
     
-
-    makeup_img = makeup(image_path, parsing_img_path)
-    makeup_img_path = os.path.join(path, 'makeup.jpg')
-    cv2.imwrite(makeup_img_path, makeup_img)
-
+    
     ''' just for check
     cv2.imshow('ori', cv2.resize(ori, (512,512))) #original img
     cv2.imshow('seg', cv2.resize(parsing.astype('uint8'), (512,512))) #segmentation img 

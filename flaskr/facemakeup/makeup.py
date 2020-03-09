@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from skimage.filters import gaussian
+import os
 
 '''
 # only for hair
@@ -45,9 +46,10 @@ def lip(image, parsing, part=12, color=[230, 50, 20]):
     changed[parsing != part] = image[parsing != part]
     return changed
 
-def makeup(face, parsing):
-    image = cv2.imread(face) #ori
-    parsing = cv2.imread(parsing) #seg
+def makeup(path):
+    # path : folder name(id)
+    image = cv2.imread(os.path.join(path, 'face.jpg')) #ori
+    parsing = cv2.imread(os.path.join(path, 'parsing.jpg')) #seg
 
     table = {
         'upper_lip': 12,
@@ -60,5 +62,16 @@ def makeup(face, parsing):
     for part, color in zip(parts, colors):
         makeup = lip(image, parsing, part, color) #hair함수에 들어가는 인자 image는 원래 원본이미지 / 한 부분, 한 색상(bgr)씩 들어감 => 3번 돌면 image 완성
 
+
+    image_path = os.path.join(path, 'face.jpg')
+    makeup_img_path = os.path.join(path, 'makeup.jpg')
+    cv2.imwrite(makeup_img_path, makeup)
+
+    '''
+    # from segmentation() to makeup()
+    makeup_img = makeup(image_path, parsing_img_path) # image_path == face, parsing_img_path == parsing
+    makeup_img_path = os.path.join(path, 'makeup.jpg')
+    cv2.imwrite(makeup_img_path, makeup_img)
+    '''
 
     return makeup
