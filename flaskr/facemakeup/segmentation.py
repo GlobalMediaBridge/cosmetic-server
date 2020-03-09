@@ -23,6 +23,6 @@ def segmentation(path):
     cv2.imshow('seg', cv2.resize(parsing.astype('uint8'), (512,512))) #segmentation img
     #print(np.shape(parsing), type(parsing)) #(960, 960), <class 'numpy.ndarray'>
     cv2.imshow('makeup', cv2.resize(makeup_img.astype('uint8'), (512,512)))
-
+    
     cv2.waitKey()
     cv2.destroyAllWindows()
