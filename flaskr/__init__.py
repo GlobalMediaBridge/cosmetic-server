@@ -5,6 +5,8 @@ from werkzeug.utils import secure_filename
 import cv2
 import numpy as np
 import uuid
+from flaskr.facemakeup.segmentation import segmentation
+from flaskr.facemakeup.makeup import makeup
 
 UPLOAD_FOLDER = 'static/images'
 if platform.system() == 'Windows':
@@ -51,7 +53,8 @@ def upload_file():
             filename = 'face.jpg'
             image_path = os.path.join(path, filename)
             f.save(image_path)
-            # segmentation(id, image_path)
+            segmentation(path)
+            makeup(path)
             return id
 
         return 'fail'
@@ -133,10 +136,17 @@ def extract_color():
 
 
 @app.route('/area/<id>/<color>')
-def show_images(id, color):
+def show_area(id, color):
     path = get_path(id)
     return send_file(os.path.join(path,
                                   "area.jpg"), mimetype='image/jpeg')
+
+
+@app.route('/makeup/<id>/<color>')
+def show_makeup(id, color):
+    path = get_path(id)
+    return send_file(os.path.join(path,
+                                  color+".jpg"), mimetype='image/jpeg')
 
 
 @app.route('/makeup', methods=['GET', 'POST'])
@@ -152,9 +162,7 @@ def put_color():
 
         path = get_path(id)
 
-        img = cv2.imread(os.path.join(path, 'face.jpg'))
-
-        # mask(img, color)
+        makeup(path, color)
         return 'success'
 
 
