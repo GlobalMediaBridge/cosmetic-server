@@ -30,7 +30,17 @@ def lip(image, parsing, part=12, color=[230, 50, 20]):
     return changed
 
 
-def makeup(path):
+def color_to_BGR(color):
+    b = color % 256
+    color //= 256
+    g = color % 256
+    color //= 256
+    r = color % 256
+    return [b, g, r]
+
+
+def makeup(path, color):
+    bgr = color_to_BGR(color)
     # path : folder name(id)
     face = cv2.imread(os.path.join(path, 'face.jpg'))  # ori
     parsing = cv2.imread(os.path.join(path, 'parsing.jpg'))  # seg
@@ -40,7 +50,7 @@ def makeup(path):
         'lower_lip': 13
     }
     parts = [table['upper_lip'], table['lower_lip']]  # [12, 13]
-    colors = [[180, 70, 20], [180, 70, 20]]  # [b,g,r] 순서
+    colors = [bgr, bgr]  # [b,g,r] 순서
 
     # lip makeup
     for part, color in zip(parts, colors):
@@ -48,4 +58,4 @@ def makeup(path):
         makeup = lip(face, parsing, part, color)
 
     # save result
-    cv2.imwrite(os.path.join(path, 'makeup.jpg'), makeup)
+    cv2.imwrite(os.path.join(path, color + '.jpg'), makeup)
