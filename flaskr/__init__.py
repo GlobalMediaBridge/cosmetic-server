@@ -135,10 +135,17 @@ def extract_color():
 
 
 @app.route('/area/<id>/<color>')
-def show_images(id, color):
+def show_area(id, color):
     path = get_path(id)
     return send_file(os.path.join(path,
                                   "area.jpg"), mimetype='image/jpeg')
+
+
+@app.route('/makeup/<id>/<color>')
+def show_makeup(id, color):
+    path = get_path(id)
+    return send_file(os.path.join(path,
+                                  color+".jpg"), mimetype='image/jpeg')
 
 
 @app.route('/makeup', methods=['GET', 'POST'])
