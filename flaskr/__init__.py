@@ -54,7 +54,6 @@ def upload_file():
             image_path = os.path.join(path, filename)
             f.save(image_path)
             segmentation(path)
-            makeup(path)
             return id
 
         return 'fail'
