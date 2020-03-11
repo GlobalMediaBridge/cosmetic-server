@@ -41,6 +41,8 @@ def color_to_BGR(color):
 
 def makeup(path, color):
     bgr = color_to_BGR(color)
+    filename = str(color) + '.jpg'
+
     # path : folder name(id)
     face = cv2.imread(os.path.join(path, 'face.jpg'))  # ori
     parsing = cv2.imread(os.path.join(path, 'parsing.jpg'))  # seg
@@ -58,4 +60,4 @@ def makeup(path, color):
         makeup = lip(face, parsing, part, color)
 
     # save result
-    cv2.imwrite(os.path.join(path, str(color) + '.jpg'), makeup)
+    cv2.imwrite(os.path.join(path, filename), makeup)
