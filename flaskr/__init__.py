@@ -142,7 +142,7 @@ def show_area(id, color):
                                   "area.jpg"), mimetype='image/jpeg')
 
 
-@app.route('/makeup/<id>/<color>')
+@app.route('/image/<id>/<color>')
 def show_makeup(id, color):
     path = get_path(id)
     return send_file(os.path.join(path,

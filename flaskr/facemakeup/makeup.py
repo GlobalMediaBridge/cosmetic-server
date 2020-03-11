@@ -58,4 +58,4 @@ def makeup(path, color):
         makeup = lip(face, parsing, part, color)
 
     # save result
-    cv2.imwrite(os.path.join(path, color + '.jpg'), makeup)
+    cv2.imwrite(os.path.join(path, str(color) + '.jpg'), makeup)
