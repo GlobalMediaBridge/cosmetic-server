@@ -40,24 +40,30 @@ def color_to_BGR(color):
 
 
 def makeup(path, color):
-    bgr = color_to_BGR(color)
+    b, g, r = color_to_BGR(color)
     filename = str(color) + '.jpg'
 
     # path : folder name(id)
     face = cv2.imread(os.path.join(path, 'face.jpg'))  # ori
     parsing = cv2.imread(os.path.join(path, 'parsing.jpg'))  # seg
+    filled = face.copy()
 
-    table = {
-        'upper_lip': 12,
-        'lower_lip': 13
-    }
-    parts = [table['upper_lip'], table['lower_lip']]  # [12, 13]
-    colors = [bgr, bgr]  # [b,g,r] 순서
+    tar_color = np.zeros_like(face)
+    tar_color[:, :, 0] = b
+    tar_color[:, :, 1] = g
+    tar_color[:, :, 2] = r
 
-    # lip makeup
-    for part, color in zip(parts, colors):
-        # 한 부분, 한 색상(bgr)씩 들어감 => 2번 돌면 makeup 완성
-        makeup = lip(face, parsing, part, color)
+    image_hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    tar_hsv = cv2.cvtColor(tar_color, cv2.COLOR_BGR2HSV)
 
-    # save result
-    cv2.imwrite(os.path.join(path, filename), makeup)
+    image_hsv[:, :, 0:2] = tar_hsv[:, :, 0:2]
+
+    masked = cv2.cvtColor(image_hsv, cv2.COLOR_HSV2BGR)
+
+    filled[parsing == 12] = masked[parsing == 12]
+    filled[parsing == 13] = masked[parsing == 13]
+    blured = cv2.GaussianBlur(filled, (5, 5), 0)
+    face[parsing == 12] = blured[parsing == 12]
+    face[parsing == 13] = blured[parsing == 13]
+
+    cv2.imwrite(os.path.join(path, filename), face)
