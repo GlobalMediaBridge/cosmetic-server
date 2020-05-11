@@ -10,6 +10,8 @@ from PIL import Image
 import torchvision.transforms as transforms
 import cv2
 
+import torch.onnx
+
 
 def vis_parsing_maps(im, parsing_anno, stride, save_im=False, save_path='vis_results/parsing_map_on_im.jpg'):
     # Colors for all 20 parts
@@ -54,9 +56,10 @@ def evaluate(image_path, cp):
 
     n_classes = 19
     net = BiSeNet(n_classes=n_classes) # BiSeNet으로 net이리는 인스턴스 생성됨. 인자로 19 넣어서 만듦.
-    net.cuda() # Tensor들을 GPU로 보내기
+    net.cuda() # Tensor들을 GPU로 보내기 => 변환시 지워야??
     net.load_state_dict(torch.load(cp))
     net.eval()
+
 
     to_tensor = transforms.Compose([
         transforms.ToTensor(),
@@ -64,17 +67,16 @@ def evaluate(image_path, cp):
     ])
 
     with torch.no_grad():
-        img = Image.open(image_path)
-        image = img.resize((512, 512), Image.BILINEAR)
-        img = to_tensor(image)
+        #segmentation.py에서 cv2.imshow("",image_path) --> 원본 그대로 
+        img = Image.open(image_path) 
+        #print(np.shape(img))
+        img = to_tensor(img)
         img = torch.unsqueeze(img, 0)
         
-        img = img.cuda()
+        img = img.cuda() # 변환시 GPU관련 코드 삭제??
         out = net(img)[0]
         parsing = out.squeeze(0).cpu().numpy().argmax(0)
-        # print(np.shape(img),np.shape(parsing),parsing) => torch.Size([1,3,512, 512]) / (512, 512) / [0 0 0...0 0 0]~[17 17 17... 17 17 17]
-        # print(np.unique(parsing)) 
-
+        
         # vis_parsing_maps(image, parsing, stride=1, save_im=False, save_path=osp.join(respth, dspth))
         return parsing
 

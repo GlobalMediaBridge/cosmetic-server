@@ -102,9 +102,9 @@ def save_mask(img, contours, path):
     viz = img.copy()
     viz = cv2.drawContours(
         viz, contours, -1, color=(255,) * 3, thickness=-1)
-    viz = cv2.addWeighted(img, 0.75, viz, 0.25, 0)
+    viz = cv2.addWeighted(img, 1, viz, 0, 0)
     viz = cv2.drawContours(
-        viz, contours, -1, color=(255,) * 3, thickness=1)
+        viz, contours, -1, color=(0,255,0), thickness=3)
     cv2.imwrite(os.path.join(path, 'area.jpg'), viz)
 
 
@@ -176,6 +176,7 @@ def getFloodMask(img, x, y, tolerance=32):
     flood_fill_flags = (
         4 | cv2.FLOODFILL_FIXED_RANGE | cv2.FLOODFILL_MASK_ONLY | 255 << 8
     )
+    
     tolerance = (tolerance,) * 3
     flood_mask[:] = 0
     cv2.floodFill(

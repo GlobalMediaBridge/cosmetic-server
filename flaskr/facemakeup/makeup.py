@@ -57,7 +57,7 @@ def makeup(path, color):
     # lip makeup
     for part, color in zip(parts, colors):
         # 한 부분, 한 색상(bgr)씩 들어감 => 2번 돌면 makeup 완성
-        makeup = lip(face, parsing, part, color)
+        face = lip(face, parsing, part, color)
 
     # save result
-    cv2.imwrite(os.path.join(path, filename), makeup)
+    cv2.imwrite(os.path.join(path, filename), face)
