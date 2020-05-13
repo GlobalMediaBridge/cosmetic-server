@@ -53,8 +53,7 @@ def upload_file():
             filename = 'face.jpg'
             image_path = os.path.join(path, filename)
             f.save(image_path)
-            segmentation(path)
-            return id
+            return segmentation(path)
 
         return 'fail'
 

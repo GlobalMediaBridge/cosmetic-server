@@ -17,7 +17,9 @@ def segmentation(path):
     image_path = os.path.join(path, 'face512.jpg')
     cv2.imwrite(image_path, img512)
     parsing = evaluate(image_path, cp)  # test.py의 evaluate() 함수.
-
+    if(12 not in parsing):
+        return 'fail'
+        
     y, x = img.shape[:2]
     # parsing_img_path = os.path.join(path, 'parsing22.jpg')
     # cv2.imwrite(parsing_img_path, parsing)
@@ -30,3 +32,4 @@ def segmentation(path):
     # save parsing image
     parsing_img_path = os.path.join(path, 'parsing.jpg')
     cv2.imwrite(parsing_img_path, parsing)
+    return 'success'
